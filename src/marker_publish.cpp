@@ -41,7 +41,6 @@
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
-#include <std_msgs/String.h>
 
 class ArucoMarkerPublisher
 {
@@ -57,7 +56,6 @@ private:
 
   // ROS pub-sub
   ros::NodeHandle nh_;
-  ros::Publisher id_pub = nh_.advertise<std_msgs::String>("id", 1);
   image_transport::ImageTransport it_;
   image_transport::Subscriber image_sub_;
 
@@ -65,7 +63,7 @@ private:
   image_transport::Publisher debug_pub_;
 
   cv::Mat inImage_;
-
+  
 public:
   ArucoMarkerPublisher() :
       nh_("~"), it_(nh_), useCamInfo_(true)
@@ -73,7 +71,7 @@ public:
     image_sub_ = it_.subscribe("/image", 1, &ArucoMarkerPublisher::image_callback, this);
     image_pub_ = it_.advertise("result", 1);
     debug_pub_ = it_.advertise("debug", 1);
-
+    
     nh_.param<bool>("use_camera_info", useCamInfo_, false);
     camParam_ = aruco::CameraParameters();
   }
@@ -85,27 +83,24 @@ public:
 
     ros::Time curr_stamp = msg->header.stamp;
     cv_bridge::CvImagePtr cv_ptr;
-
+    
     try
     {
       cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
       inImage_ = cv_ptr->image;
-
+   
       // clear out previous detection results
       markers_.clear();
 
       // ok, let's detect
       mDetector_.detect(inImage_, markers_, camParam_, marker_size_, false);
 
-
-    std_msgs::String msg;
+		std::cout << "The id of the detected marker detected is: ";
         for (std::size_t i = 0; i < markers_.size(); ++i)
         {
-          std::stringstream ss;
-          ss << markers_.at(i).id;
-          msg.data = ss.str();
-          id_pub.publish(msg);
+          std::cout << markers_.at(i).id << " ";
         }
+        std::cout << std::endl;
 
       // draw detected markers on the image for visualization
       for (std::size_t i = 0; i < markers_.size(); ++i)
