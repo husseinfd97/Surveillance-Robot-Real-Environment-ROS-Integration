@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-  <node name="scanner" pkg="assignment2" type="scanner.py" output="screen"/>
+ 
+  <node pkg="armor" type="execute" name="armor_service" args="it.emarolab.armor.ARMORMainService"/>
+  <node name="load_ontology" pkg="assignment2" type="load_ontology.py" output="screen"/>
+  
+  
 
 </launch>

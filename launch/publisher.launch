@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 
 <launch>
-
-	<node pkg="aruco_ros" name="marker_publisher" type="marker_publisher" output="screen"/>
-	
+    <node name="scanner" pkg="assignment2" type="scanner.py" output="screen"/>
+  
+  <node name="marker_publisher" pkg="aruco_ros" type="marker_publisher" output="screen">
+        <remap from="/image" to="/robot/camera/rgb/image_raw"/>
+  </node>
+    
 </launch>
