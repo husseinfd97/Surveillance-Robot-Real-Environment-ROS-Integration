@@ -113,8 +113,14 @@
     <rosparam file="$(find assignment2)/param/move_base_params.yaml" command="load"/>
   </node> 
   <node pkg="armor" type="execute" name="armor_service" args="it.emarolab.armor.ARMORMainService"/>
-  <remap from="/image" to="/robot/camera/rgb/image_raw" />
   
+  
+  <node name="scanner" pkg="assignment2" type="scanner.py" output="screen"/>
+  
+  <node name="marker_publisher" pkg="aruco_ros" type="marker_publisher" output="screen">
+        <remap from="/image" to="/robot/camera/rgb/image_raw"/>
+  </node>
+    
 
 
     

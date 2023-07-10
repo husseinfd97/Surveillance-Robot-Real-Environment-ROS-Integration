@@ -25,6 +25,7 @@ new_map = path + "/../maps/new_map.owl"
 
 ids=[]
 
+
 def get_ids(string):
     global ids
     ids = list(set(ids + [int(lett) for lett in string.data.split() if lett.isdigit() and 10 < int(lett) < 18]))
@@ -34,20 +35,21 @@ def get_ids(string):
 
 def clean_list(list):
     """
-    Function for finding the individual in a list from the returned query property from armor.
+    Function for finding the individuals in a list from the returned query property from Armor.
 
     Args:
-        list (list): The individual in the armor response format, e.g., ['<http://bnc/exp-rob-lab/2022-23#E>']
+        list (list): The individuals in the Armor response format, e.g., ['<http://bnc/exp-rob-lab/2022-23#E>']
 
     Returns:
-        str: The extracted individual as a string, e.g., "E"
+        list: The extracted individuals as a list of strings, e.g., ["E"]
     """
     individuals = ['R1', 'R2', 'R3', 'R4', 'C1', 'C2', 'E']
+    cleaned_list = []
     for i in list:
         for individual in individuals:
             if individual in i:
-                return individual
-    return ""
+                cleaned_list.append(individual)
+    return cleaned_list
 
 def findtime(list):
     """
@@ -70,6 +72,7 @@ def findtime(list):
 
     
 
+
 def load_map():
     """
     Popolates the ontology according to the markers ids and save the names of the robot and all the locations, rooms and corridors
@@ -86,15 +89,18 @@ def load_map():
     print (locations)
 
     rospy.wait_for_service('/room_info')
-    room_info = rospy.ServiceProxy('/room_info', RoomInformation)
-    print ("haha1")
+    room_info = rospy.ServiceProxy('room_info', RoomInformation)
+    #print ('a7a')
+    #print (room_info)
 
     rospy.loginfo('Adding locations:')
     for id in ids:
-        res = room_info(int(id))
-        print(res)
+        res = room_info(id)
+        #print(res)
         room = res.room
-        print (room)
+        print('room')
+        print(res.x)
+        print(res.y)
         position_x = str(res.x)
         position_y = str(res.y)
         # if the room does not exist, add it
@@ -135,19 +141,19 @@ def load_map():
     client.call('REPLACE','DATAPROP','IND',['now','Robot1','Long',new,old])
     client.call('REASON','','',[''])
 
-    #SAVE THE CONSTANTS LISTS
+    #SAVE THE CONSTANTS LISTS(((alaaaaaaaaaaaaaaaaaaarrrmmmm it doesn't do the sipiration)))
     rooms = client.call('QUERY','IND','CLASS',['ROOM'])
     rooms = clean_list(rooms.queried_objects)
     print ("rooms quired")
     print(rooms)
-    corridors = client.call('QUERY','IND','CLASS',['CORRIDOR'])
-    corridors = clean_list(corridors.queried_objects)
-    print ("corridor quired")
-    print(corridors)
+    # corridors = client.call('QUERY','IND','CLASS',['CORRIDOR'])
+    # corridors = clean_list(corridors.queried_objects)
+    # print ("corridor quired")
+    # print(corridors)
     rospy.loginfo('Locations:')
     rospy.loginfo(rooms)
-    rospy.loginfo('of which, corridors:')
-    rospy.loginfo(corridors)
+    # rospy.loginfo('of which, corridors:')
+    # rospy.loginfo(corridors)
 
     # At first the robot is in the recharging room
     client.call('ADD','OBJECTPROP','IND',['isIn', 'Robot1','E'])
@@ -169,6 +175,7 @@ def load_map():
     client.call('SAVE','','',[new_map])
     print ("i reached the end")
 
+
 def main():
    """
    The main function of the script. It initializes a ROS node, creates a subscriber and a publisher, and sets up a service client. It then enters a loop that waits for a message to be received on the subscriber, processes the message, and publishes a response. The loop also sleeps for a random amount of time before processing the next message.
@@ -179,22 +186,23 @@ def main():
    Returns:
    None
    """
-   rospy.init_node('mapsituation_node', anonymous=True)
-   #subscriber=rospy.Subscriber("/marker_publisher/marker_pub_topic", String, get_ids)
+   global ids
+   rospy.init_node('load_map_node', anonymous=True)
+   subscriber=rospy.Subscriber("/marker_publisher/marker_pub_topic", String, get_ids)
    while True:
       print("waiting for ids")
-      ids=[11, 12, 13, 14, 15, 16, 17]
+      #ids=[11, 12, 13, 14, 15, 16, 17]
       print(ids)
       if len(ids)>=7:
         print("I have all the markers, I will build the map")
-        #subscriber.unregister()
-        pub = rospy.Publisher('mapsituation', Bool, queue_size=10)
+        subscriber.unregister()
+        pub = rospy.Publisher('load_map_pub', Bool, queue_size=10)
         pub.publish(0)
         load_map()
         print("Map built, I will shutdown the node")
         pub.publish(1)
         rospy.sleep(3)
-        rospy.signal_shutdown('mapsituation_node')
+        rospy.signal_shutdown('load_map_node')
       rospy.sleep(1)
 
 

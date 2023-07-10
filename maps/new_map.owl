@@ -115,6 +115,26 @@
     
 
 
+    <!-- http://bnc/exp-rob-lab/2022-23#position_x -->
+
+
+    <owl:DatatypeProperty rdf:about="http://bnc/exp-rob-lab/2022-23#position_x">
+        <rdfs:domain rdf:resource="http://bnc/exp-rob-lab/2022-23#LOCATION"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#position_y -->
+
+
+    <owl:DatatypeProperty rdf:about="http://bnc/exp-rob-lab/2022-23#position_y">
+        <rdfs:domain rdf:resource="http://bnc/exp-rob-lab/2022-23#LOCATION"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://bnc/exp-rob-lab/2022-23#urgencyThreshold -->
 
 
@@ -244,11 +264,164 @@
     
 
 
+    <!-- http://bnc/exp-rob-lab/2022-23#C1 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#C1">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#LOCATION"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D1"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D2"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D5"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D7"/>
+        <position_x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">-1.5</position_x>
+        <position_y rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0.0</position_y>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">0</visitedAt>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#C2 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#C2">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#LOCATION"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D3"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D4"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D6"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D7"/>
+        <position_x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">3.5</position_x>
+        <position_y rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0.0</position_y>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">0</visitedAt>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#D1 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#D1">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#DOOR"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#D2 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#D2">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#DOOR"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#D3 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#D3">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#DOOR"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#D4 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#D4">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#DOOR"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#D5 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#D5">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#DOOR"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#D6 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#D6">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#DOOR"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#D7 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#D7">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#DOOR"/>
+    </owl:NamedIndividual>
+    
+
+
     <!-- http://bnc/exp-rob-lab/2022-23#E -->
 
 
     <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#E">
-        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1688857698</visitedAt>
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#LOCATION"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D5"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D6"/>
+        <position_x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.5</position_x>
+        <position_y rdf:datatype="http://www.w3.org/2001/XMLSchema#float">8.0</position_y>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">0</visitedAt>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1688997007</visitedAt>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#R1 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#R1">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#LOCATION"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D1"/>
+        <position_x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">-7.0</position_x>
+        <position_y rdf:datatype="http://www.w3.org/2001/XMLSchema#float">3.0</position_y>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">0</visitedAt>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#R2 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#R2">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#LOCATION"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D2"/>
+        <position_x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">-7.0</position_x>
+        <position_y rdf:datatype="http://www.w3.org/2001/XMLSchema#float">-4.0</position_y>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">0</visitedAt>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#R3 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#R3">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#LOCATION"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D3"/>
+        <position_x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">9.0</position_x>
+        <position_y rdf:datatype="http://www.w3.org/2001/XMLSchema#float">3.0</position_y>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">0</visitedAt>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://bnc/exp-rob-lab/2022-23#R4 -->
+
+
+    <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#R4">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#LOCATION"/>
+        <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D4"/>
+        <position_x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">9.0</position_x>
+        <position_y rdf:datatype="http://www.w3.org/2001/XMLSchema#float">-4.0</position_y>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">0</visitedAt>
     </owl:NamedIndividual>
     
 
@@ -257,9 +430,10 @@
 
 
     <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#Robot1">
+        <rdf:type rdf:resource="http://bnc/exp-rob-lab/2022-23#ROBOT"/>
         <isIn rdf:resource="http://bnc/exp-rob-lab/2022-23#E"/>
-        <now rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1688857698</now>
-        <urgencyThreshold rdf:datatype="http://www.w3.org/2001/XMLSchema#long">15</urgencyThreshold>
+        <now rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1688997007</now>
+        <urgencyThreshold rdf:datatype="http://www.w3.org/2001/XMLSchema#long">7</urgencyThreshold>
     </owl:NamedIndividual>
     
 
@@ -284,6 +458,12 @@
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDifferent"/>
         <owl:distinctMembers rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDifferent"/>
+        <owl:distinctMembers rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://bnc/exp-rob-lab/2022-23#Robot1"/>
+        </owl:distinctMembers>
     </rdf:Description>
     
 

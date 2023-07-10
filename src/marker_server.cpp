@@ -94,7 +94,7 @@ bool markerCallback(assignment2::RoomInformation::Request &req, assignment2::Roo
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "assignment2");
+	ros::init(argc, argv, "marker_server");
 	ros::NodeHandle nh;
 	ros::ServiceServer oracle = nh.advertiseService( "/room_info",markerCallback);
 	ros::spin();
