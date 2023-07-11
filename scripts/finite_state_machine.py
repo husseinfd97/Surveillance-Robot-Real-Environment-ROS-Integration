@@ -29,7 +29,7 @@ new_map = path + "/../maps/new_map.owl"
  
 ######### 
 
-map_Uploaded_flag=1
+map_Uploaded_flag=0
 battery_charged_flag=1
 urgent_room_flag=0
 planning_finished_flag=1
@@ -52,15 +52,15 @@ def move_base(desired):
     try:
         move_base_service = rospy.ServiceProxy('robot_coordinates', robot_coordinates )
         response = move_base_service(coordinates[desired]['X'], coordinates[desired]['Y'])
-        if response.success:
+        if response.return_ ==1 :
             print("Target reached successfully!")
-            return True
+            return 1
         else:
             print("Target not reached. Retrying...")
             return move_base(desired)  # Retry the move_base call
     except rospy.ServiceException as e:
         print("Service call failed:", str(e))
-        return False
+        return 0
 
 
 def round_in_the_room():
@@ -88,6 +88,27 @@ def round_in_the_room():
         iterations -= 1
     rospy.sleep(5)
 
+#def set_coordinates():
+    """
+    Sets the global variable 'coordinates' to a dictionary of the locations and their corresponding X and Y coordinates.
+
+    First, a list of room names is created. Then, for each room in the list, the Xcoordinates and Ycoordinates of the room are queried using the ArmorClient and stored as variables 'X' and 'Y', respectively. These values are then added to the 'coordinates' dictionary as a key-value pair with the room name as the key and a dictionary of the X and Y coordinates as the value.
+
+    Args:
+        void
+
+    Returns:
+        void
+    """
+    # global coordinates
+    # client = ArmorClient("example", "ontoRef")
+    # list_of_rooms = ['R1', 'R2', 'R3', 'R4', 'C1', 'C2', 'E']
+    # for i in list_of_rooms:
+    #     req=client.call('QUERY','DATAPROP','IND',['Xcoordinates', i])
+    #     X=float(findbt(req.queried_objects))
+    #     req=client.call('QUERY','DATAPROP','IND',['Ycoordinates', i])
+    #     Y=float(findbt(req.queried_objects))
+    #     coordinates[i] = {'X': X, 'Y': Y}
 def set_coordinates():
     """
     Sets the global variable 'coordinates' to a dictionary of the locations and their corresponding X and Y coordinates.
@@ -101,14 +122,27 @@ def set_coordinates():
         void
     """
     global coordinates
+    coordinates = {}  # Initialize coordinates as an empty dictionary
+
     client = ArmorClient("example", "ontoRef")
     list_of_rooms = ['R1', 'R2', 'R3', 'R4', 'C1', 'C2', 'E']
     for i in list_of_rooms:
-        req=client.call('QUERY','DATAPROP','IND',['Xcoordinates', i])
-        X=float(findbt(req.queried_objects))
-        req=client.call('QUERY','DATAPROP','IND',['Ycoordinates', i])
-        Y=float(findbt(req.queried_objects))
+        req = client.call('QUERY', 'DATAPROP', 'IND', ['Xcoordinates', i])
+        X = findbt(req.queried_objects)
+        if X is not None:
+            X = float(X)
+        else:
+            # Handle the case when X is None (provide a default value or take appropriate action)
+            X = 0.0  # Example: Set X to 0.0
+        req = client.call('QUERY', 'DATAPROP', 'IND', ['Ycoordinates', i])
+        Y = findbt(req.queried_objects)
+        if Y is not None:
+            Y = float(Y)
+        else:
+            # Handle the case when Y is None (provide a default value or take appropriate action)
+            Y = 0.0  # Example: Set Y to 0.0
         coordinates[i] = {'X': X, 'Y': Y}
+
 
 def clean_list(list):
     """
@@ -334,7 +368,7 @@ def update_location_property(client, robot, new_location, old_location):
     rt=move_base(new_location)
     if rt == 1:
         client.call('REPLACE', 'OBJECTPROP', 'IND', ['isIn', robot, new_location, old_location])
-        client.call('REASON', '', '', [''])
+        client.call('REASON','','',[''])
 
 def update_now_property(client, robot):
     """
@@ -388,14 +422,15 @@ def generate_path_to_target(client, current_location, target_location, reachable
     common_location = find_common_connection(target_connectedTo, reachable_locations)
 
     if common_location is None:
-        update_location_property(client, 'Robot1', reachable_locations[0], current_location)
-        current_location = reachable_locations[0]
-        hena = client.call('QUERY', 'OBJECTPROP', 'IND', ['isIn', 'Robot1'])
-        hena = clean_list(hena.queried_objects)
-        print('Robot here at:', hena)
-        reachable_locations_query = client.call('QUERY', 'OBJECTPROP', 'IND', ['canReach', 'Robot1'])
-        reachable_locations = list_Locations(reachable_locations_query.queried_objects)
-        common_location = find_common_connection(target_connectedTo, reachable_locations)
+        if len(reachable_locations) > 0:  # Check if the reachable_locations list 
+            update_location_property(client, 'Robot1', reachable_locations[0], current_location)
+            current_location = reachable_locations[0]
+            hena = client.call('QUERY', 'OBJECTPROP', 'IND', ['isIn', 'Robot1'])
+            hena = clean_list(hena.queried_objects)
+            print('Robot here at:', hena)
+            reachable_locations_query = client.call('QUERY', 'OBJECTPROP', 'IND', ['canReach', 'Robot1'])
+            reachable_locations = list_Locations(reachable_locations_query.queried_objects)
+            common_location = find_common_connection(target_connectedTo, reachable_locations)
 
     potential_path.append(common_location)
     potential_path.append(target_location)
@@ -549,7 +584,7 @@ def main():
 
 
     rospy.Subscriber("load_map_node", Bool, callback_map)
-    rospy.Subscriber("battery_state", Bool, callback_bat)
+    #rospy.Subscriber("battery_state", Bool, callback_bat)
     rospy.wait_for_service('robot_coordinates')
 
 

@@ -190,7 +190,7 @@ def main():
    rospy.init_node('load_map_node', anonymous=True)
    subscriber=rospy.Subscriber("/marker_publisher/marker_pub_topic", String, get_ids)
    while True:
-      print("waiting for ids")
+      #print("waiting for ids")
       #ids=[11, 12, 13, 14, 15, 16, 17]
       print(ids)
       if len(ids)>=7:
