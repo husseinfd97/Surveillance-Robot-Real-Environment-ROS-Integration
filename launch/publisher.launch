@@ -1,10 +1,13 @@
 <?xml version="1.0"?>
 
 <launch>
+	<node pkg="armor" type="execute" name="armor_service" args="it.emarolab.armor.ARMORMainService" />
     <!--<node name="scanner" pkg="assignment2" type="scanner.py" output="screen"/> -->
 	<node name="marker_server" pkg="assignment2" type="marker_server" />
-	<node name="marker_publisher" pkg="aruco_ros" type="marker_publisher" output="screen">
+	<!--<node name="marker_publisher" pkg="aruco_ros" type="marker_publisher" output="screen">
         <remap from="/image" to="/robot/camera/rgb/image_raw"/>
-  </node>
+	</node>-->
+	
+	<node name="load_ontology" pkg="assignment2" type="load_ontology.py" output="screen"/> 
     
 </launch>

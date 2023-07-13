@@ -29,7 +29,7 @@ new_map = path + "/../maps/new_map.owl"
  
 ######### 
 
-map_Uploaded_flag=0
+map_Uploaded_flag=1
 battery_charged_flag=1
 urgent_room_flag=0
 planning_finished_flag=1
@@ -38,29 +38,34 @@ coordinates=[]
 
 
 
+
+        
 def move_base(desired):
     """
-    Move the robot to the specified location using the move_base function.
+    This function moves the robot to the specified location.
 
     Args:
         desired (str): The name of the location to move the robot to.
 
     Returns:
-        bool: True if the target was reached successfully, False otherwise.
+        rt: The result of the cordinates_srv service call, indicating whether the target was reached successfully.
     """
-    rospy.wait_for_service('robot_coordinates')  # Wait for the move_base service to become available
-    try:
-        move_base_service = rospy.ServiceProxy('robot_coordinates', robot_coordinates )
-        response = move_base_service(coordinates[desired]['X'], coordinates[desired]['Y'])
-        if response.return_ ==1 :
+    print(desired)
+    tx=0
+    cordinates_srv = rospy.ServiceProxy('robot_coordinates', robot_coordinates)
+    x=coordinates[desired]['X']
+    y=coordinates[desired]['Y']
+    print(cordinates_srv)
+    rt=cordinates_srv(x, y)
+    print(rt)
+    if rt.return_ == 1:
             print("Target reached successfully!")
-            return 1
-        else:
-            print("Target not reached. Retrying...")
-            return move_base(desired)  # Retry the move_base call
-    except rospy.ServiceException as e:
-        print("Service call failed:", str(e))
-        return 0
+            tx=1
+    else:
+            print("Target not reached try again!")
+            move_base(desired)
+            tx=0
+    return tx
 
 
 def round_in_the_room():
@@ -127,14 +132,15 @@ def set_coordinates():
     client = ArmorClient("example", "ontoRef")
     list_of_rooms = ['R1', 'R2', 'R3', 'R4', 'C1', 'C2', 'E']
     for i in list_of_rooms:
-        req = client.call('QUERY', 'DATAPROP', 'IND', ['Xcoordinates', i])
+        req = client.call('QUERY', 'DATAPROP', 'IND', ['X-coordinates', i])
         X = findbt(req.queried_objects)
+        print(X)
         if X is not None:
             X = float(X)
         else:
             # Handle the case when X is None (provide a default value or take appropriate action)
             X = 0.0  # Example: Set X to 0.0
-        req = client.call('QUERY', 'DATAPROP', 'IND', ['Ycoordinates', i])
+        req = client.call('QUERY', 'DATAPROP', 'IND', ['Y-coordinates', i])
         Y = findbt(req.queried_objects)
         if Y is not None:
             Y = float(Y)
@@ -142,6 +148,7 @@ def set_coordinates():
             # Handle the case when Y is None (provide a default value or take appropriate action)
             Y = 0.0  # Example: Set Y to 0.0
         coordinates[i] = {'X': X, 'Y': Y}
+        print(coordinates[i])
 
 
 def clean_list(list):
@@ -161,7 +168,7 @@ def clean_list(list):
                 return individual
     return ""
 
-def findtime(list):
+def extract_time(list):
     """
     Function for finding the time in Unix format from the returned query property from armor.
 
@@ -299,6 +306,7 @@ def moveto(target_location):
     """
     client = ArmorClient("example", "ontoRef")
     client.call('REASON', '', '', [''])
+    
 
     # Query initial robot location
     initial_location_query = client.call('QUERY', 'OBJECTPROP', 'IND', ['isIn', 'Robot1'])
@@ -313,16 +321,26 @@ def moveto(target_location):
     else:
         reachable_locations_query = client.call('QUERY', 'OBJECTPROP', 'IND', ['canReach', 'Robot1'])
         reachable_locations = list_Locations(reachable_locations_query.queried_objects)
-        
         if target_location in reachable_locations:
+            print('a7a1')
             update_location_property(client, 'Robot1', target_location, current_location)
+            print('a7a2')
             update_now_property(client, 'Robot1')
             check_and_update_visitedat_property(client, target_location)
         else:
+            print(reachable_locations)
+            print('yoo')
+            print(target_location)
             potential_path = generate_path_to_target(client, current_location, target_location, reachable_locations)
+            print(potential_path)
             intermediate_location = potential_path[0]
             current_location = potential_path[2]
+            print('a7a2')
+            print(target_location)
+            print(intermediate_location)
+            print(current_location)
             update_location_property(client, 'Robot1', intermediate_location, current_location)
+            print('a7a3')
             hena = client.call('QUERY', 'OBJECTPROP', 'IND', ['isIn', 'Robot1'])
             hena = clean_list(hena.queried_objects)
             print('Robot here at:', hena)
@@ -334,7 +352,9 @@ def moveto(target_location):
             reachable_locations = list_Locations(reachable_locations_query.queried_objects)
 
             if target_location in reachable_locations:
+                print('a7a4')
                 update_location_property(client, 'Robot1', target_location, current_location)
+                print('a7a5')
                 update_now_property(client, 'Robot1')
                 check_and_update_visitedat_property(client, target_location)
 
@@ -364,6 +384,7 @@ def update_location_property(client, robot, new_location, old_location):
         new_location (str): The new location to update.
         old_location (str): The old location to replace.
     """
+    print(new_location)
 
     rt=move_base(new_location)
     if rt == 1:
@@ -422,15 +443,14 @@ def generate_path_to_target(client, current_location, target_location, reachable
     common_location = find_common_connection(target_connectedTo, reachable_locations)
 
     if common_location is None:
-        if len(reachable_locations) > 0:  # Check if the reachable_locations list 
-            update_location_property(client, 'Robot1', reachable_locations[0], current_location)
-            current_location = reachable_locations[0]
-            hena = client.call('QUERY', 'OBJECTPROP', 'IND', ['isIn', 'Robot1'])
-            hena = clean_list(hena.queried_objects)
-            print('Robot here at:', hena)
-            reachable_locations_query = client.call('QUERY', 'OBJECTPROP', 'IND', ['canReach', 'Robot1'])
-            reachable_locations = list_Locations(reachable_locations_query.queried_objects)
-            common_location = find_common_connection(target_connectedTo, reachable_locations)
+        update_location_property(client, 'Robot1', reachable_locations[0], current_location)
+        current_location = reachable_locations[0]
+        hena = client.call('QUERY', 'OBJECTPROP', 'IND', ['isIn', 'Robot1'])
+        hena = clean_list(hena.queried_objects)
+        print('Robot here at:', hena)
+        reachable_locations_query = client.call('QUERY', 'OBJECTPROP', 'IND', ['canReach', 'Robot1'])
+        reachable_locations = list_Locations(reachable_locations_query.queried_objects)
+        common_location = find_common_connection(target_connectedTo, reachable_locations)
 
     potential_path.append(common_location)
     potential_path.append(target_location)
@@ -495,7 +515,7 @@ class moving_in_corridoor_planning_for_urgent(smach.State):
             print("BATTERY LOW")
             return 'battery_low'
 
-        elif battery_charged_flag==1 and urgent_room_flag==1:
+        elif battery_charged_flag==1 :
             if urgent_room_flag==1:
                 print("urgent room detected")
                 return 'urgent_room_exist'
@@ -583,7 +603,7 @@ def main():
 
 
 
-    rospy.Subscriber("load_map_node", Bool, callback_map)
+    rospy.Subscriber("load_map", Bool, callback_map)
     #rospy.Subscriber("battery_state", Bool, callback_bat)
     rospy.wait_for_service('robot_coordinates')
 
