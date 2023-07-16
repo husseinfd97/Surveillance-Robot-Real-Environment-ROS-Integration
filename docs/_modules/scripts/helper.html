@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>scripts.helper &mdash; assignmen2  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            assignmen2
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">assignmen2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">scripts.helper</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for scripts.helper</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: helper</span>
+<span class="sd">  :platform: Unix </span>
+<span class="sd">  :synopsis: Python module for having extra functions needed in the system</span>
+<span class="sd">.. moduleauthor:: Hussein Ahmed Fouad Hassan, S5165612@studenti.unige.it</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">roslib</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">rospy</span>
+<span class="kn">import</span> <span class="nn">rospkg</span>
+<span class="kn">import</span> <span class="nn">smach</span>
+<span class="kn">import</span> <span class="nn">smach_ros</span>
+<span class="kn">from</span> <span class="nn">std_msgs.msg</span> <span class="kn">import</span> <span class="n">Bool</span>
+<span class="kn">from</span> <span class="nn">armor_api.armor_client</span> <span class="kn">import</span> <span class="n">ArmorClient</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">realpath</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+
+
+<div class="viewcode-block" id="clean_list"><a class="viewcode-back" href="../../index.html#scripts.helper.clean_list">[docs]</a><span class="k">def</span> <span class="nf">clean_list</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function for finding the individual in a list from the returned query property from armor.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        list (list): The individual in the armor response format, e.g., [&#39;&lt;http://bnc/exp-rob-lab/2022-23#E&gt;&#39;]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The extracted individual as a string, e.g., &quot;E&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">individuals</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;R1&#39;</span><span class="p">,</span> <span class="s1">&#39;R2&#39;</span><span class="p">,</span> <span class="s1">&#39;R3&#39;</span><span class="p">,</span> <span class="s1">&#39;R4&#39;</span><span class="p">,</span> <span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">individuals</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">individual</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+<span class="c1"># def findtime(list):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Function for finding the time in Unix format from the returned query property from armor.</span>
+
+<span class="c1">#     Args:</span>
+<span class="c1">#         list (list): The time in the armor response format, e.g., [&#39;&quot;1669241751&quot;^^xsd:long&#39;]</span>
+
+<span class="c1">#     Returns:</span>
+<span class="c1">#         str: The extracted time as a string, e.g., &quot;1665579740&quot;</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     for i in list:</span>
+<span class="c1">#         try:</span>
+<span class="c1">#             start = i.index(&#39;&quot;&#39;) + len(&#39;&quot;&#39;)</span>
+<span class="c1">#             end = i.index(&#39;&quot;&#39;, start)</span>
+<span class="c1">#             return i[start:end]</span>
+<span class="c1">#         except ValueError:</span>
+<span class="c1">#             pass</span>
+<span class="c1">#     return &quot;&quot;</span>
+
+<div class="viewcode-block" id="get_time"><a class="viewcode-back" href="../../index.html#scripts.helper.get_time">[docs]</a><span class="k">def</span> <span class="nf">get_time</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function for extracting data between quotation marks from a list. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lst (list): A list containing strings with data enclosed in quotation marks. </span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The extracted data. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">i</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="list_Locations"><a class="viewcode-back" href="../../index.html#scripts.helper.list_Locations">[docs]</a><span class="k">def</span> <span class="nf">list_Locations</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function for extracting the locations from a list of query properties.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lst (list): A list containing query properties, e.g., [&#39;&lt;http://bnc/exp-rob-lab/2022-23#R1&gt;&#39;, &#39;&lt;http://bnc/exp-rob-lab/2022-23#R2&gt;&#39;]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: The extracted locations, e.g., [&#39;R1&#39;, &#39;R2&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">position_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;R1&quot;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">position_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;R1&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;R2&quot;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">position_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;R2&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;R3&quot;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">position_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;R3&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;R4&quot;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">position_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;R4&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;C1&quot;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">position_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;C1&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;C2&quot;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">position_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;E&quot;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">position_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">position_list</span></div>
+
+<div class="viewcode-block" id="same_elements_bt_lists"><a class="viewcode-back" href="../../index.html#scripts.helper.same_elements_bt_lists">[docs]</a><span class="k">def</span> <span class="nf">same_elements_bt_lists</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function for finding a common connection between two lists.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        l1 (list): The first list.</span>
+<span class="sd">        l2 (list): The second list.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The common connection between the two lists, if found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">common</span> <span class="ow">in</span> <span class="n">l1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">common</span> <span class="ow">in</span> <span class="n">l2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">common</span></div>
+
+<div class="viewcode-block" id="get_least_visit_time_room"><a class="viewcode-back" href="../../index.html#scripts.helper.get_least_visit_time_room">[docs]</a><span class="k">def</span> <span class="nf">get_least_visit_time_room</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the room with the least visit time from the given room-time pairs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        args: Alternating arguments of room and time pairs. The time value must be a number.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The room with the least visit time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">visit_times</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Iterate over the alternating room-time pairs</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">visit_times</span><span class="p">[</span><span class="n">room</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span>
+
+    <span class="n">min_visit_time</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">visit_times</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">least_visited_room</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">visit_times</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">visit_times</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">least_visited_room</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Hussein.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -360,7 +360,7 @@
         <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D7"/>
         <X-coordinates rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1.5</X-coordinates>
         <Y-coordinates rdf:datatype="http://www.w3.org/2001/XMLSchema#float">8.0</Y-coordinates>
-        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689159366</visitedAt>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689516709</visitedAt>
     </owl:NamedIndividual>
     
 
@@ -372,7 +372,7 @@
         <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D1"/>
         <X-coordinates rdf:datatype="http://www.w3.org/2001/XMLSchema#float">-7.0</X-coordinates>
         <Y-coordinates rdf:datatype="http://www.w3.org/2001/XMLSchema#float">3.0</Y-coordinates>
-        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689159363</visitedAt>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689516706</visitedAt>
     </owl:NamedIndividual>
     
 
@@ -384,7 +384,7 @@
         <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D2"/>
         <X-coordinates rdf:datatype="http://www.w3.org/2001/XMLSchema#float">-7.0</X-coordinates>
         <Y-coordinates rdf:datatype="http://www.w3.org/2001/XMLSchema#float">-4.0</Y-coordinates>
-        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689159363</visitedAt>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689516706</visitedAt>
     </owl:NamedIndividual>
     
 
@@ -396,7 +396,7 @@
         <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D3"/>
         <X-coordinates rdf:datatype="http://www.w3.org/2001/XMLSchema#float">9.0</X-coordinates>
         <Y-coordinates rdf:datatype="http://www.w3.org/2001/XMLSchema#float">3.0</Y-coordinates>
-        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689159363</visitedAt>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689516706</visitedAt>
     </owl:NamedIndividual>
     
 
@@ -408,7 +408,7 @@
         <hasDoor rdf:resource="http://bnc/exp-rob-lab/2022-23#D4"/>
         <X-coordinates rdf:datatype="http://www.w3.org/2001/XMLSchema#float">9.0</X-coordinates>
         <Y-coordinates rdf:datatype="http://www.w3.org/2001/XMLSchema#float">-4.0</Y-coordinates>
-        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689159363</visitedAt>
+        <visitedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689516706</visitedAt>
     </owl:NamedIndividual>
     
 
@@ -418,7 +418,7 @@
 
     <owl:NamedIndividual rdf:about="http://bnc/exp-rob-lab/2022-23#Robot1">
         <isIn rdf:resource="http://bnc/exp-rob-lab/2022-23#E"/>
-        <now rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689159366</now>
+        <now rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1689516710</now>
         <urgencyThreshold rdf:datatype="http://www.w3.org/2001/XMLSchema#long">7</urgencyThreshold>
     </owl:NamedIndividual>
     

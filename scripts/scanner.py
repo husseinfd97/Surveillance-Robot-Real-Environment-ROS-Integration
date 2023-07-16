@@ -3,10 +3,10 @@
 """
 .. module::scanner
     :platform: Unix
-    :synopsis: Python module for the state machine
-.. moduleauthor:: 
+    :synopsis: Python module for scanning the markers by moving the joints
+.. moduleauthor:: Hussein Ahmed Fouad Hassan, S5165612@studenti.unige.it
 
-ROS node for controlling the camera arm of the proposed robot
+ROS node for controlling the arm which holds the camera to scan the markers
 
 Action server:
 
@@ -14,12 +14,6 @@ Action server:
 
 """
 
-"""
-This script is responsible for moving the arm of the robot in order to scan the room for markers.
-It subscribes to the '/robot/joint1_position_controller/state' topic to get feedback on the current position of the arm and
-publishes to the '/robot/joint1_position_controller/command' topic to control the movement of the arm.
-The arm is moved from its initial position to -3.14 radians and then back to 1.5 radians before returning to its initial position at 0 radians.
-"""
 
 import rospy
 from control_msgs.msg import JointControllerState

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>scripts.finite_state_machine &mdash; assignmen2  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            assignmen2
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">assignmen2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">scripts.finite_state_machine</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for scripts.finite_state_machine</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: finite_state_machine</span>
+<span class="sd">  :platform: Unix </span>
+<span class="sd">  :synopsis: Python module for the node state machine control</span>
+<span class="sd">.. moduleauthor:: Hussein Ahmed Fouad Hassan, S5165612@studenti.unige.it</span>
+
+<span class="sd">The primary purpose of this module is to execute the state machine for the robot.</span>
+<span class="sd">It effectively manages state transitions and ensures a clear and organized implementation </span>
+<span class="sd">of the robot&#39;s state machine.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">roslib</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">rospy</span>
+<span class="kn">import</span> <span class="nn">rospkg</span>
+<span class="kn">import</span> <span class="nn">smach</span>
+<span class="kn">import</span> <span class="nn">smach_ros</span>
+<span class="kn">from</span> <span class="nn">std_msgs.msg</span> <span class="kn">import</span> <span class="n">Bool</span>
+<span class="kn">from</span> <span class="nn">std_msgs.msg</span> <span class="kn">import</span> <span class="n">Float64</span>
+<span class="kn">from</span> <span class="nn">assignment2.srv</span> <span class="kn">import</span> <span class="n">robot_coordinates</span>
+<span class="kn">from</span> <span class="nn">geometry_msgs.msg</span> <span class="kn">import</span> <span class="n">Twist</span>
+<span class="kn">from</span> <span class="nn">armor_api.armor_client</span> <span class="kn">import</span> <span class="n">ArmorClient</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">realpath</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="c1">#import helper</span>
+
+<span class="c1"># Get the map direction to be uploaded  </span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">new_map</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/../maps/new_map.owl&quot;</span>
+
+ 
+<span class="c1"># Set the initial values of the status flages</span>
+<span class="n">map_Uploaded_flag</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">battery_charged_flag</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">urgent_room_flag</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">planning_finished_flag</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">coordinates</span><span class="o">=</span><span class="p">[]</span>
+
+
+       
+<div class="viewcode-block" id="move_in_the_map"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.move_in_the_map">[docs]</a><span class="k">def</span> <span class="nf">move_in_the_map</span><span class="p">(</span><span class="n">desired</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function moves the real robot to the specified location in the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        desired (str): The name of the location to move the robot to.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        rt: The result of the cordinates_srv service call, indicating whether the target was reached successfully.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tx</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">cordinates_srv</span> <span class="o">=</span> <span class="n">rospy</span><span class="o">.</span><span class="n">ServiceProxy</span><span class="p">(</span><span class="s1">&#39;robot_coordinates&#39;</span><span class="p">,</span> <span class="n">robot_coordinates</span><span class="p">)</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">coordinates</span><span class="p">[</span><span class="n">desired</span><span class="p">][</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">coordinates</span><span class="p">[</span><span class="n">desired</span><span class="p">][</span><span class="s1">&#39;Y&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cordinates_srv</span><span class="p">)</span>
+    <span class="n">rt</span><span class="o">=</span><span class="n">cordinates_srv</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rt</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rt</span><span class="o">.</span><span class="n">return_</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Target reached successfully!&quot;</span><span class="p">)</span>
+            <span class="n">tx</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Target not reached try again!&quot;</span><span class="p">)</span>
+            <span class="n">move_in_the_map</span><span class="p">(</span><span class="n">desired</span><span class="p">)</span>
+            <span class="n">tx</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">return</span> <span class="n">tx</span></div>
+
+
+<div class="viewcode-block" id="round_in_the_room"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.round_in_the_room">[docs]</a><span class="k">def</span> <span class="nf">round_in_the_room</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function for scanning the environment by rotating the robot in place.</span>
+
+<span class="sd">    This function rotates the robot in place by publishing a Twist message with a positive angular.z value to the &#39;cmd_vel&#39; topic.</span>
+<span class="sd">    It does this for 10 iterations at a rate of 10Hz, and then sleeps for 5 seconds.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scanning the room to map it...&quot;</span><span class="p">)</span>
+    <span class="n">pub</span> <span class="o">=</span> <span class="n">rospy</span><span class="o">.</span><span class="n">Publisher</span><span class="p">(</span><span class="s1">&#39;cmd_vel&#39;</span><span class="p">,</span> <span class="n">Twist</span><span class="p">,</span> <span class="n">queue_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">twist_msg</span> <span class="o">=</span> <span class="n">Twist</span><span class="p">()</span>
+    <span class="n">twist_msg</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Rotate with positive angular.z value</span>
+    <span class="n">rate</span> <span class="o">=</span> <span class="n">rospy</span><span class="o">.</span><span class="n">Rate</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">iterations</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">while</span> <span class="n">iterations</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">twist_msg</span><span class="p">)</span>
+        <span class="n">rate</span><span class="o">.</span><span class="n">sleep</span><span class="p">()</span>
+        <span class="n">iterations</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="n">rospy</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="set_map_coordinates"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.set_map_coordinates">[docs]</a><span class="k">def</span> <span class="nf">set_map_coordinates</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initially, a list of room names is generated. For each room in the list, the ArmorClient</span>
+<span class="sd">    is used to query and retrieve the respective X and Y coordinates. These values are stored</span>
+<span class="sd">    in variables &#39;X&#39; and &#39;Y&#39; from the map after it&#39;s loaded, respectively. Subsequently, the function</span>
+<span class="sd">    populates the &#39;coordinates&#39;dictionary with the room name as the key and a nested dictionary containing </span>
+<span class="sd">    the X and Y coordinates as the value.</span>
+
+
+<span class="sd">   </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">coordinates</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Initialize coordinates as an empty dictionary</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="n">ArmorClient</span><span class="p">(</span><span class="s2">&quot;example&quot;</span><span class="p">,</span> <span class="s2">&quot;ontoRef&quot;</span><span class="p">)</span>
+    <span class="n">list_of_rooms</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;R1&#39;</span><span class="p">,</span> <span class="s1">&#39;R2&#39;</span><span class="p">,</span> <span class="s1">&#39;R3&#39;</span><span class="p">,</span> <span class="s1">&#39;R4&#39;</span><span class="p">,</span> <span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">list_of_rooms</span><span class="p">:</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;DATAPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;X-coordinates&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">get_time</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">X</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Handle the case when X is None (provide a default value or take appropriate action)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Example: Set X to 0.0</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;DATAPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Y-coordinates&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">get_time</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">Y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Handle the case when Y is None (provide a default value or take appropriate action)</span>
+            <span class="n">Y</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Example: Set Y to 0.0</span>
+        <span class="n">coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="n">Y</span><span class="p">}</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="check_nearby_urgent_room"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.check_nearby_urgent_room">[docs]</a><span class="k">def</span> <span class="nf">check_nearby_urgent_room</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check for nearby urgent rooms, update the global `urgent_room_flag`, and return the urgent room if it exists.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The urgent room nearby, according to the urgency of each robot. Returns &#39;0&#39; if no urgent room is found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">urgent_room_flag</span>
+    <span class="n">urgent_room_flag</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Initially, assume there&#39;s no urgent room</span>
+    <span class="n">least_room</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="n">ArmorClient</span><span class="p">(</span><span class="s2">&quot;example&quot;</span><span class="p">,</span> <span class="s2">&quot;ontoRef&quot;</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;REASON&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Query for urgent rooms</span>
+    <span class="n">urgent_rooms_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="s1">&#39;CLASS&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;URGENT&#39;</span><span class="p">])</span>
+    <span class="c1">#print(helper.list_Locations(urgent_rooms_query.queried_objects))</span>
+    <span class="n">urgent_rooms_query</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">list_Locations</span><span class="p">(</span><span class="n">urgent_rooms_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;REASON&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Query current robot location</span>
+    <span class="n">current_location_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;OBJECTPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;isIn&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">])</span>
+    <span class="n">current_location</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">clean_list</span><span class="p">(</span><span class="n">current_location_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">current_location</span> <span class="o">==</span> <span class="s1">&#39;C1&#39;</span><span class="p">:</span>
+        <span class="n">room1_visit_time_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;DATAPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;visitedAt&#39;</span><span class="p">,</span> <span class="s1">&#39;R1&#39;</span><span class="p">])</span>
+        <span class="n">room2_visit_time_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;DATAPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;visitedAt&#39;</span><span class="p">,</span> <span class="s1">&#39;R2&#39;</span><span class="p">])</span>
+        <span class="n">room1_visit_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">helper</span><span class="o">.</span><span class="n">get_time</span><span class="p">(</span><span class="n">room1_visit_time_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">))</span>
+        <span class="n">room2_visit_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">helper</span><span class="o">.</span><span class="n">get_time</span><span class="p">(</span><span class="n">room2_visit_time_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">))</span>
+        <span class="n">least_room</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">get_least_visit_time_room</span><span class="p">(</span><span class="s1">&#39;R1&#39;</span><span class="p">,</span> <span class="n">room1_visit_time</span><span class="p">,</span> <span class="s1">&#39;R2&#39;</span><span class="p">,</span> <span class="n">room2_visit_time</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">current_location</span> <span class="o">==</span> <span class="s1">&#39;C2&#39;</span><span class="p">:</span>
+        <span class="n">room3_visit_time_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;DATAPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;visitedAt&#39;</span><span class="p">,</span> <span class="s1">&#39;R3&#39;</span><span class="p">])</span>
+        <span class="n">room4_visit_time_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;DATAPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;visitedAt&#39;</span><span class="p">,</span> <span class="s1">&#39;R4&#39;</span><span class="p">])</span>
+        <span class="n">room3_visit_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">helper</span><span class="o">.</span><span class="n">get_time</span><span class="p">(</span><span class="n">room3_visit_time_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">))</span>
+        <span class="n">room4_visit_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">helper</span><span class="o">.</span><span class="n">get_time</span><span class="p">(</span><span class="n">room4_visit_time_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">))</span>
+        <span class="n">least_room</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">get_least_visit_time_room</span><span class="p">(</span><span class="s1">&#39;R3&#39;</span><span class="p">,</span> <span class="n">room3_visit_time</span><span class="p">,</span> <span class="s1">&#39;R4&#39;</span><span class="p">,</span> <span class="n">room4_visit_time</span><span class="p">)</span>
+
+    <span class="n">room</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">same_elements_bt_lists</span><span class="p">([</span><span class="n">least_room</span><span class="p">],</span> <span class="n">urgent_rooms_query</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">room</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;R1&quot;</span> <span class="ow">in</span> <span class="n">room</span><span class="p">:</span>
+            <span class="n">urgent_room_flag</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="s1">&#39;R1&#39;</span>
+        <span class="k">elif</span> <span class="s2">&quot;R2&quot;</span> <span class="ow">in</span> <span class="n">room</span><span class="p">:</span>
+            <span class="n">urgent_room_flag</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="s1">&#39;R2&#39;</span>
+        <span class="k">elif</span> <span class="s2">&quot;R3&quot;</span> <span class="ow">in</span> <span class="n">room</span><span class="p">:</span>
+            <span class="n">urgent_room_flag</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="s1">&#39;R3&#39;</span>
+        <span class="k">elif</span> <span class="s2">&quot;R4&quot;</span> <span class="ow">in</span> <span class="n">room</span><span class="p">:</span>
+            <span class="n">urgent_room_flag</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="s1">&#39;R4&#39;</span>
+
+    <span class="k">return</span> <span class="s1">&#39;0&#39;</span>  <span class="c1"># No nearby urgent room found</span></div>
+
+<div class="viewcode-block" id="navigate_to"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.navigate_to">[docs]</a><span class="k">def</span> <span class="nf">navigate_to</span><span class="p">(</span><span class="n">target_location</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Navigate the robot to the target location and check the best path to do that .</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        target_location (str): The location to which the robot should move.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">ArmorClient</span><span class="p">(</span><span class="s2">&quot;example&quot;</span><span class="p">,</span> <span class="s2">&quot;ontoRef&quot;</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;REASON&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
+    
+
+    <span class="c1"># Query initial robot location</span>
+    <span class="n">initial_location_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;OBJECTPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;isIn&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">])</span>
+    <span class="n">current_location</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">clean_list</span><span class="p">(</span><span class="n">initial_location_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;From&#39;</span><span class="p">,</span> <span class="n">current_location</span><span class="p">,</span> <span class="s1">&#39;to:&#39;</span><span class="p">,</span> <span class="n">target_location</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">target_location</span> <span class="o">==</span> <span class="n">current_location</span><span class="p">:</span>
+        <span class="c1"># If the target location is the same as the current location, directly move to the target location</span>
+        <span class="n">update_location_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">,</span> <span class="n">target_location</span><span class="p">,</span> <span class="n">current_location</span><span class="p">)</span>
+        <span class="n">update_now_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">)</span>
+        <span class="n">check_and_update_visitedat_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">target_location</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reachable_locations_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;OBJECTPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;canReach&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">])</span>
+        <span class="n">reachable_locations</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">list_Locations</span><span class="p">(</span><span class="n">reachable_locations_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">target_location</span> <span class="ow">in</span> <span class="n">reachable_locations</span><span class="p">:</span>
+            <span class="c1">#print(&#39;check1&#39;)</span>
+            <span class="n">update_location_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">,</span> <span class="n">target_location</span><span class="p">,</span> <span class="n">current_location</span><span class="p">)</span>
+            <span class="c1">#print(&#39;check2&#39;)</span>
+            <span class="n">update_now_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">)</span>
+            <span class="n">check_and_update_visitedat_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">target_location</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">reachable_locations</span><span class="p">)</span>
+            <span class="c1">#print(&#39;check3&#39;)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">target_location</span><span class="p">)</span>
+            <span class="n">potential_path</span> <span class="o">=</span> <span class="n">generate_path_to_target</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">current_location</span><span class="p">,</span> <span class="n">target_location</span><span class="p">,</span> <span class="n">reachable_locations</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">potential_path</span><span class="p">)</span>
+            <span class="n">intermediate_location</span> <span class="o">=</span> <span class="n">potential_path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">current_location</span> <span class="o">=</span> <span class="n">potential_path</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="c1">#print(&#39;check4&#39;)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">target_location</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">intermediate_location</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">current_location</span><span class="p">)</span>
+            <span class="n">update_location_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">,</span> <span class="n">intermediate_location</span><span class="p">,</span> <span class="n">current_location</span><span class="p">)</span>
+            <span class="c1">#print(&#39;check5&#39;)</span>
+            <span class="n">hena</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;OBJECTPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;isIn&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">])</span>
+            <span class="n">hena</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">clean_list</span><span class="p">(</span><span class="n">hena</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Robot here at:&#39;</span><span class="p">,</span> <span class="n">hena</span><span class="p">)</span>
+            <span class="n">update_now_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">)</span>
+            <span class="n">check_and_update_visitedat_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">intermediate_location</span><span class="p">)</span>
+            <span class="n">current_location</span> <span class="o">=</span> <span class="n">intermediate_location</span>
+
+            <span class="n">reachable_locations_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;OBJECTPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;canReach&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">])</span>
+            <span class="n">reachable_locations</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">list_Locations</span><span class="p">(</span><span class="n">reachable_locations_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">target_location</span> <span class="ow">in</span> <span class="n">reachable_locations</span><span class="p">:</span>
+                <span class="c1">#print(&#39;check6&#39;)</span>
+                <span class="n">update_location_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">,</span> <span class="n">target_location</span><span class="p">,</span> <span class="n">current_location</span><span class="p">)</span>
+                <span class="c1">#print(&#39;check7&#39;)</span>
+                <span class="n">update_now_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">)</span>
+                <span class="n">check_and_update_visitedat_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">target_location</span><span class="p">)</span>
+
+    <span class="n">final_location_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;OBJECTPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;isIn&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Robot finally isIn&#39;</span><span class="p">,</span> <span class="n">helper</span><span class="o">.</span><span class="n">clean_list</span><span class="p">(</span><span class="n">final_location_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="update_location_property"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.update_location_property">[docs]</a><span class="k">def</span> <span class="nf">update_location_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">new_location</span><span class="p">,</span> <span class="n">old_location</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the location property of the robot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (ArmorClient): The ArmorClient object for making calls to the server.</span>
+<span class="sd">        robot (str): The name of the robot.</span>
+<span class="sd">        new_location (str): The new location to update.</span>
+<span class="sd">        old_location (str): The old location to replace.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">new_location</span><span class="p">)</span>
+
+    <span class="n">rt</span><span class="o">=</span><span class="n">move_in_the_map</span><span class="p">(</span><span class="n">new_location</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;REPLACE&#39;</span><span class="p">,</span> <span class="s1">&#39;OBJECTPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;isIn&#39;</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">new_location</span><span class="p">,</span> <span class="n">old_location</span><span class="p">])</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;REASON&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,[</span><span class="s1">&#39;&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="update_now_property"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.update_now_property">[docs]</a><span class="k">def</span> <span class="nf">update_now_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">robot</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the current time property of the robot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (ArmorClient): The ArmorClient object for making calls to the server.</span>
+<span class="sd">        robot (str): The name of the robot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">current_time_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;DATAPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;now&#39;</span><span class="p">,</span> <span class="n">robot</span><span class="p">])</span>
+    <span class="n">current_time</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">get_time</span><span class="p">(</span><span class="n">current_time_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;REPLACE&#39;</span><span class="p">,</span> <span class="s1">&#39;DATAPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span>
+                <span class="p">[</span><span class="s1">&#39;now&#39;</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="s1">&#39;Long&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())),</span> <span class="n">current_time</span><span class="p">])</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;REASON&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="check_and_update_visitedat_property"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.check_and_update_visitedat_property">[docs]</a><span class="k">def</span> <span class="nf">check_and_update_visitedat_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check and update the visitedAt property of the given location.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (ArmorClient): The ArmorClient object for making calls to the server.</span>
+<span class="sd">        location (str): The location to check and update.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">location_class_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;CLASS&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">location</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="n">location_class_query</span><span class="o">.</span><span class="n">queried_objects</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;URGENT&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">location_class_query</span><span class="o">.</span><span class="n">queried_objects</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;ROOM&#39;</span><span class="p">]:</span>
+        <span class="n">visited_time_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;DATAPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;visitedAt&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">])</span>
+        <span class="n">visited_time</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">get_time</span><span class="p">(</span><span class="n">visited_time_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;REPLACE&#39;</span><span class="p">,</span> <span class="s1">&#39;DATAPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span>
+                    <span class="p">[</span><span class="s1">&#39;visitedAt&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="s1">&#39;Long&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())),</span> <span class="n">visited_time</span><span class="p">])</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;REASON&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="generate_path_to_target"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.generate_path_to_target">[docs]</a><span class="k">def</span> <span class="nf">generate_path_to_target</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">current_location</span><span class="p">,</span> <span class="n">target_location</span><span class="p">,</span> <span class="n">reachable_locations</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a potential path from the current location to the target location.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (ArmorClient): The ArmorClient object for making calls to the server.</span>
+<span class="sd">        current_location (str): The current location of the robot.</span>
+<span class="sd">        target_location (str): The target location to reach.</span>
+<span class="sd">        reachable_locations (list): List of reachable locations from the current location.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A potential path from the current location to the target location.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">potential_path</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">target_connectedTo_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;OBJECTPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;connectedTo&#39;</span><span class="p">,</span> <span class="n">target_location</span><span class="p">])</span>
+    <span class="n">target_connectedTo</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">list_Locations</span><span class="p">(</span><span class="n">target_connectedTo_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+    <span class="n">common_location</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">same_elements_bt_lists</span><span class="p">(</span><span class="n">target_connectedTo</span><span class="p">,</span> <span class="n">reachable_locations</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">common_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">update_location_property</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">,</span> <span class="n">reachable_locations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">current_location</span><span class="p">)</span>
+        <span class="n">current_location</span> <span class="o">=</span> <span class="n">reachable_locations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">hena</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;OBJECTPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;isIn&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">])</span>
+        <span class="n">hena</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">clean_list</span><span class="p">(</span><span class="n">hena</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Robot here at:&#39;</span><span class="p">,</span> <span class="n">hena</span><span class="p">)</span>
+        <span class="n">reachable_locations_query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;QUERY&#39;</span><span class="p">,</span> <span class="s1">&#39;OBJECTPROP&#39;</span><span class="p">,</span> <span class="s1">&#39;IND&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;canReach&#39;</span><span class="p">,</span> <span class="s1">&#39;Robot1&#39;</span><span class="p">])</span>
+        <span class="n">reachable_locations</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">list_Locations</span><span class="p">(</span><span class="n">reachable_locations_query</span><span class="o">.</span><span class="n">queried_objects</span><span class="p">)</span>
+        <span class="n">common_location</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">same_elements_bt_lists</span><span class="p">(</span><span class="n">target_connectedTo</span><span class="p">,</span> <span class="n">reachable_locations</span><span class="p">)</span>
+
+    <span class="n">potential_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">common_location</span><span class="p">)</span>
+    <span class="n">potential_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_location</span><span class="p">)</span>
+    <span class="n">potential_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_location</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">potential_path</span></div>
+
+
+<div class="viewcode-block" id="callback_map"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.callback_map">[docs]</a><span class="k">def</span> <span class="nf">callback_map</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    callback function for updating the published bool detects the status of </span>
+<span class="sd">    map_uploaded_flag (map uploaded or not).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: the subscribed bool value.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        map_Uploaded_flag: The flag after changing it&#39;s status.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">map_Uploaded_flag</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">map_Uploaded_flag</span><span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">map_Uploaded_flag</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="callback_bat"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.callback_bat">[docs]</a><span class="k">def</span> <span class="nf">callback_bat</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    callback function for updating the published bool detects the status of </span>
+<span class="sd">    battery_charged_flag (battery status).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: the subscribed bool value.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        battery_charged_flag: The flag after changing its status.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">battery_charged_flag</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">battery_charged_flag</span><span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">battery_charged_flag</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="loading_map"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.loading_map">[docs]</a><span class="k">class</span> <span class="nc">loading_map</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    State class for the loading_map state in the finite state machine to wait in it until the map is built.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;NOT_YET_UPLODED&#39;</span><span class="p">,</span> <span class="s1">&#39;UPLOADED&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="loading_map.execute"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.loading_map.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">map_Uploaded_flag</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">ArmorClient</span><span class="p">(</span><span class="s2">&quot;example&quot;</span><span class="p">,</span> <span class="s2">&quot;ontoRef&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+        <span class="n">rospy</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">map_Uploaded_flag</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;NOT_YET_UPLODED&#39;</span>
+        <span class="k">elif</span> <span class="n">map_Uploaded_flag</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;LOAD&#39;</span><span class="p">,</span><span class="s1">&#39;FILE&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,[</span><span class="n">new_map</span><span class="p">,</span> <span class="s1">&#39;http://bnc/exp-rob-lab/2022-23&#39;</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;PELLET&#39;</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MAP IS LOADED SUCCESSFULLY&quot;</span><span class="p">)</span>
+            <span class="n">set_map_coordinates</span><span class="p">()</span>
+            <span class="k">return</span> <span class="s1">&#39;UPLOADED&#39;</span>   </div></div>
+
+
+
+<div class="viewcode-block" id="moving_in_corridoor_planning_for_urgent"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.moving_in_corridoor_planning_for_urgent">[docs]</a><span class="k">class</span> <span class="nc">moving_in_corridoor_planning_for_urgent</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    State class for the moving_in_corridoor_planning_for_urgent state in the finite state machine for the robot to keep </span>
+<span class="sd">    moving in corridoor until there is urgent room detected.  </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;still_moving_in_cooridoor&#39;</span><span class="p">,</span><span class="s1">&#39;urgent_room_exist&#39;</span><span class="p">,</span><span class="s1">&#39;battery_low&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="moving_in_corridoor_planning_for_urgent.execute"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.moving_in_corridoor_planning_for_urgent.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">battery_charged_flag</span>
+        <span class="k">global</span> <span class="n">urgent_room_flag</span> 
+        <span class="n">client</span> <span class="o">=</span> <span class="n">ArmorClient</span><span class="p">(</span><span class="s2">&quot;example&quot;</span><span class="p">,</span> <span class="s2">&quot;ontoRef&quot;</span><span class="p">)</span>
+        <span class="n">check_nearby_urgent_room</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">battery_charged_flag</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BATTERY LOW&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;battery_low&#39;</span>
+
+        <span class="k">elif</span> <span class="n">battery_charged_flag</span><span class="o">==</span><span class="mi">1</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="n">urgent_room_flag</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;urgent room detected&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s1">&#39;urgent_room_exist&#39;</span>
+            <span class="k">elif</span> <span class="n">urgent_room_flag</span> <span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">navigate_to</span><span class="p">(</span><span class="s1">&#39;C1&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;im moving to c1&quot;</span><span class="p">)</span>
+                    <span class="n">rospy</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">navigate_to</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;moving to c2&quot;</span><span class="p">)</span>
+                    <span class="n">rospy</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;still_moving_in_cooridoor&#39;</span>
+            
+        <span class="c1">#can be removed from here to the end of the </span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">navigate_to</span><span class="p">(</span><span class="s1">&#39;C1&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;im moving to c1&quot;</span><span class="p">)</span>
+                <span class="n">rospy</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">navigate_to</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;moving to c2&quot;</span><span class="p">)</span>
+                <span class="n">rospy</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;still_moving_in_cooridoor&#39;</span></div></div>
+        
+
+<div class="viewcode-block" id="move_to_urgent_room"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.move_to_urgent_room">[docs]</a><span class="k">class</span> <span class="nc">move_to_urgent_room</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    State class for the move_to_urgent_room state in the finite state machine once the urgent is chosen.  </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;still_moving_to_urgent_rooms&#39;</span><span class="p">,</span><span class="s1">&#39;cannot_plan&#39;</span><span class="p">,</span><span class="s1">&#39;battery_low&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="move_to_urgent_room.execute"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.move_to_urgent_room.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">battery_charged_flag</span>
+        <span class="k">global</span> <span class="n">urgent_room_flag</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">ArmorClient</span><span class="p">(</span><span class="s2">&quot;example&quot;</span><span class="p">,</span> <span class="s2">&quot;ontoRef&quot;</span><span class="p">)</span>
+        <span class="n">check_nearby_urgent_room</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">battery_charged_flag</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;battery_low&#39;</span>
+        <span class="k">elif</span>  <span class="n">battery_charged_flag</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">urgent_room_flag</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;cannot_plan&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">final_urgent_room</span><span class="o">=</span><span class="n">check_nearby_urgent_room</span><span class="p">()</span>
+                <span class="n">navigate_to</span><span class="p">(</span><span class="n">final_urgent_room</span><span class="p">)</span>
+                <span class="n">round_in_the_room</span><span class="p">()</span>
+                <span class="k">return</span> <span class="s1">&#39;still_moving_to_urgent_rooms&#39;</span></div></div>
+
+        
+
+<div class="viewcode-block" id="Recharging"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.Recharging">[docs]</a><span class="k">class</span> <span class="nc">Recharging</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    State class for the Recharging state in the finite state machine for going to the charging </span>
+<span class="sd">    room to charge the robot&#39;s battery.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;still_charging_battery&#39;</span><span class="p">,</span><span class="s1">&#39;battery_charged&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Recharging.execute"><a class="viewcode-back" href="../../index.html#scripts.finite_state_machine.Recharging.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">):</span>
+        
+        <span class="k">global</span> <span class="n">battery_charged_flag</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">ArmorClient</span><span class="p">(</span><span class="s2">&quot;example&quot;</span><span class="p">,</span> <span class="s2">&quot;ontoRef&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">battery_charged_flag</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">navigate_to</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;still_charging_battery&#39;</span>
+        <span class="k">elif</span> <span class="n">battery_charged_flag</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="s1">&#39;battery_charged&#39;</span></div></div>
+
+
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">rospy</span><span class="o">.</span><span class="n">init_node</span><span class="p">(</span><span class="s1">&#39;finite_state_machine&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create a SMACH state machine</span>
+    <span class="n">R_FMS</span> <span class="o">=</span> <span class="n">smach</span><span class="o">.</span><span class="n">StateMachine</span><span class="p">(</span><span class="n">outcomes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Open the container</span>
+    <span class="k">with</span> <span class="n">R_FMS</span><span class="p">:</span>
+        <span class="c1"># Add states to the container</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">StateMachine</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;loading_map&#39;</span><span class="p">,</span> <span class="n">loading_map</span><span class="p">(),</span> 
+                                <span class="n">transitions</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NOT_YET_UPLODED&#39;</span><span class="p">:</span><span class="s1">&#39;loading_map&#39;</span><span class="p">,</span> <span class="s1">&#39;UPLOADED&#39;</span><span class="p">:</span><span class="s1">&#39;moving_in_corridoor_planning_for_urgent&#39;</span><span class="p">})</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">StateMachine</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;moving_in_corridoor_planning_for_urgent&#39;</span><span class="p">,</span> <span class="n">moving_in_corridoor_planning_for_urgent</span><span class="p">(),</span> 
+                                <span class="n">transitions</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;still_moving_in_cooridoor&#39;</span><span class="p">:</span><span class="s1">&#39;moving_in_corridoor_planning_for_urgent&#39;</span><span class="p">,</span><span class="s1">&#39;urgent_room_exist&#39;</span><span class="p">:</span><span class="s1">&#39;move_to_urgent_room&#39;</span><span class="p">,</span><span class="s1">&#39;battery_low&#39;</span><span class="p">:</span><span class="s1">&#39;Recharging&#39;</span><span class="p">})</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">StateMachine</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;move_to_urgent_room&#39;</span><span class="p">,</span> <span class="n">move_to_urgent_room</span><span class="p">(),</span> 
+                        <span class="n">transitions</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;still_moving_to_urgent_rooms&#39;</span><span class="p">:</span><span class="s1">&#39;move_to_urgent_room&#39;</span><span class="p">,</span><span class="s1">&#39;cannot_plan&#39;</span><span class="p">:</span><span class="s1">&#39;moving_in_corridoor_planning_for_urgent&#39;</span><span class="p">,</span><span class="s1">&#39;battery_low&#39;</span><span class="p">:</span><span class="s1">&#39;Recharging&#39;</span><span class="p">})</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">StateMachine</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;Recharging&#39;</span><span class="p">,</span> <span class="n">Recharging</span><span class="p">(),</span> 
+                        <span class="n">transitions</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;still_charging_battery&#39;</span><span class="p">:</span><span class="s1">&#39;Recharging&#39;</span><span class="p">,</span><span class="s1">&#39;battery_charged&#39;</span><span class="p">:</span><span class="s1">&#39;moving_in_corridoor_planning_for_urgent&#39;</span> <span class="p">})</span>
+
+
+
+    <span class="n">rospy</span><span class="o">.</span><span class="n">Subscriber</span><span class="p">(</span><span class="s2">&quot;load_map&quot;</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">callback_map</span><span class="p">)</span>
+    <span class="n">rospy</span><span class="o">.</span><span class="n">Subscriber</span><span class="p">(</span><span class="s2">&quot;battery_state&quot;</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">callback_bat</span><span class="p">)</span>
+    <span class="n">rospy</span><span class="o">.</span><span class="n">wait_for_service</span><span class="p">(</span><span class="s1">&#39;robot_coordinates&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create and start the introspection server for visualization</span>
+    <span class="n">sis</span> <span class="o">=</span> <span class="n">smach_ros</span><span class="o">.</span><span class="n">IntrospectionServer</span><span class="p">(</span><span class="s1">&#39;server_name&#39;</span><span class="p">,</span> <span class="n">R_FMS</span><span class="p">,</span> <span class="s1">&#39;/SM_ROOT&#39;</span><span class="p">)</span>
+    <span class="n">sis</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c1"># Execute the state machine</span>
+    <span class="n">outcome</span> <span class="o">=</span> <span class="n">R_FMS</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+    <span class="n">rospy</span><span class="o">.</span><span class="n">spin</span><span class="p">()</span>
+    <span class="n">sis</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Hussein.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 """
 
-.. module:: choice_one
+.. module:: autonomous
     :platform: Unix
     :synopsis: Python code for autonomous robot drive 
 .. moduleauthor:: Hussein Hassan  S5165612@studenti.unige.it
@@ -67,7 +67,7 @@ def handler(req):
 #main
 if __name__=="__main__":
     
-    print("choice one node started  (autonomous node )")
+    print(" (autonomous node )")
     rospy.init_node('coordinate_autonomous')
     s = rospy.Service('robot_coordinates' ,robot_coordinates ,handler)
     print("service ready")

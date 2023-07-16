@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to assignmen2’s documentation! &mdash; assignmen2  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            assignmen2
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Welcome to assignmen2’s documentation!</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#module-scripts.helper">Helper Module</a><ul>
+<li><a class="reference internal" href="#scripts.helper.clean_list"><code class="docutils literal notranslate"><span class="pre">clean_list()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.helper.get_least_visit_time_room"><code class="docutils literal notranslate"><span class="pre">get_least_visit_time_room()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.helper.get_time"><code class="docutils literal notranslate"><span class="pre">get_time()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.helper.list_Locations"><code class="docutils literal notranslate"><span class="pre">list_Locations()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.helper.same_elements_bt_lists"><code class="docutils literal notranslate"><span class="pre">same_elements_bt_lists()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-scripts.finite_state_machine">Finite State Machine Module</a><ul>
+<li><a class="reference internal" href="#scripts.finite_state_machine.Recharging"><code class="docutils literal notranslate"><span class="pre">Recharging</span></code></a><ul>
+<li><a class="reference internal" href="#scripts.finite_state_machine.Recharging.execute"><code class="docutils literal notranslate"><span class="pre">Recharging.execute()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.callback_bat"><code class="docutils literal notranslate"><span class="pre">callback_bat()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.callback_map"><code class="docutils literal notranslate"><span class="pre">callback_map()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.check_and_update_visitedat_property"><code class="docutils literal notranslate"><span class="pre">check_and_update_visitedat_property()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.check_nearby_urgent_room"><code class="docutils literal notranslate"><span class="pre">check_nearby_urgent_room()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.generate_path_to_target"><code class="docutils literal notranslate"><span class="pre">generate_path_to_target()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.loading_map"><code class="docutils literal notranslate"><span class="pre">loading_map</span></code></a><ul>
+<li><a class="reference internal" href="#scripts.finite_state_machine.loading_map.execute"><code class="docutils literal notranslate"><span class="pre">loading_map.execute()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.move_in_the_map"><code class="docutils literal notranslate"><span class="pre">move_in_the_map()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.move_to_urgent_room"><code class="docutils literal notranslate"><span class="pre">move_to_urgent_room</span></code></a><ul>
+<li><a class="reference internal" href="#scripts.finite_state_machine.move_to_urgent_room.execute"><code class="docutils literal notranslate"><span class="pre">move_to_urgent_room.execute()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.moving_in_corridoor_planning_for_urgent"><code class="docutils literal notranslate"><span class="pre">moving_in_corridoor_planning_for_urgent</span></code></a><ul>
+<li><a class="reference internal" href="#scripts.finite_state_machine.moving_in_corridoor_planning_for_urgent.execute"><code class="docutils literal notranslate"><span class="pre">moving_in_corridoor_planning_for_urgent.execute()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.navigate_to"><code class="docutils literal notranslate"><span class="pre">navigate_to()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.round_in_the_room"><code class="docutils literal notranslate"><span class="pre">round_in_the_room()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.set_map_coordinates"><code class="docutils literal notranslate"><span class="pre">set_map_coordinates()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.update_location_property"><code class="docutils literal notranslate"><span class="pre">update_location_property()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.finite_state_machine.update_now_property"><code class="docutils literal notranslate"><span class="pre">update_now_property()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-scripts.battery">Battery Module</a><ul>
+<li><a class="reference internal" href="#scripts.battery.battery_state_publisher"><code class="docutils literal notranslate"><span class="pre">battery_state_publisher()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-scripts.load_ontology">Load Ontology Module</a><ul>
+<li><a class="reference internal" href="#scripts.load_ontology.get_ids"><code class="docutils literal notranslate"><span class="pre">get_ids()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.load_ontology.load_map"><code class="docutils literal notranslate"><span class="pre">load_map()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.load_ontology.update_timestamp"><code class="docutils literal notranslate"><span class="pre">update_timestamp()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-scripts.autonomous">Autonomous Module</a><ul>
+<li><a class="reference internal" href="#scripts.autonomous.handler"><code class="docutils literal notranslate"><span class="pre">handler()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-scripts.scanner">Scanner Module</a><ul>
+<li><a class="reference internal" href="#scripts.scanner.arm_move"><code class="docutils literal notranslate"><span class="pre">arm_move()</span></code></a></li>
+<li><a class="reference internal" href="#scripts.scanner.callback"><code class="docutils literal notranslate"><span class="pre">callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">assignmen2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to assignmen2’s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-assignmen2-s-documentation">
+<h1>Welcome to assignmen2’s documentation!<a class="headerlink" href="#welcome-to-assignmen2-s-documentation" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+<section id="module-scripts.helper">
+<span id="helper-module"></span><h1>Helper Module<a class="headerlink" href="#module-scripts.helper" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-helper"></span><dl class="py function">
+<dt class="sig sig-object py" id="scripts.helper.clean_list">
+<span class="sig-prename descclassname"><span class="pre">scripts.helper.</span></span><span class="sig-name descname"><span class="pre">clean_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/helper.html#clean_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.helper.clean_list" title="Permalink to this definition"></a></dt>
+<dd><p>Function for finding the individual in a list from the returned query property from armor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>list</strong> (<em>list</em>) – The individual in the armor response format, e.g., [‘&lt;<a class="reference external" href="http://bnc/exp-rob-lab/2022-23#E">http://bnc/exp-rob-lab/2022-23#E</a>&gt;’]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The extracted individual as a string, e.g., “E”</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.helper.get_least_visit_time_room">
+<span class="sig-prename descclassname"><span class="pre">scripts.helper.</span></span><span class="sig-name descname"><span class="pre">get_least_visit_time_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/helper.html#get_least_visit_time_room"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.helper.get_least_visit_time_room" title="Permalink to this definition"></a></dt>
+<dd><p>Get the room with the least visit time from the given room-time pairs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> – Alternating arguments of room and time pairs. The time value must be a number.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The room with the least visit time.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.helper.get_time">
+<span class="sig-prename descclassname"><span class="pre">scripts.helper.</span></span><span class="sig-name descname"><span class="pre">get_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/helper.html#get_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.helper.get_time" title="Permalink to this definition"></a></dt>
+<dd><p>Function for extracting data between quotation marks from a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lst</strong> (<em>list</em>) – A list containing strings with data enclosed in quotation marks.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The extracted data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.helper.list_Locations">
+<span class="sig-prename descclassname"><span class="pre">scripts.helper.</span></span><span class="sig-name descname"><span class="pre">list_Locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/helper.html#list_Locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.helper.list_Locations" title="Permalink to this definition"></a></dt>
+<dd><p>Function for extracting the locations from a list of query properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lst</strong> (<em>list</em>) – A list containing query properties, e.g., [‘&lt;<a class="reference external" href="http://bnc/exp-rob-lab/2022-23#R1">http://bnc/exp-rob-lab/2022-23#R1</a>&gt;’, ‘&lt;<a class="reference external" href="http://bnc/exp-rob-lab/2022-23#R2">http://bnc/exp-rob-lab/2022-23#R2</a>&gt;’]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The extracted locations, e.g., [‘R1’, ‘R2’]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.helper.same_elements_bt_lists">
+<span class="sig-prename descclassname"><span class="pre">scripts.helper.</span></span><span class="sig-name descname"><span class="pre">same_elements_bt_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/helper.html#same_elements_bt_lists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.helper.same_elements_bt_lists" title="Permalink to this definition"></a></dt>
+<dd><p>Function for finding a common connection between two lists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l1</strong> (<em>list</em>) – The first list.</p></li>
+<li><p><strong>l2</strong> (<em>list</em>) – The second list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The common connection between the two lists, if found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-scripts.finite_state_machine">
+<span id="finite-state-machine-module"></span><h1>Finite State Machine Module<a class="headerlink" href="#module-scripts.finite_state_machine" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-finite_state_machine"></span><p>The primary purpose of this module is to execute the state machine for the robot.
+It effectively manages state transitions and ensures a clear and organized implementation
+of the robot’s state machine.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.Recharging">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">Recharging</span></span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#Recharging"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.Recharging" title="Permalink to this definition"></a></dt>
+<dd><p>State class for the Recharging state in the finite state machine for going to the charging
+room to charge the robot’s battery.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.Recharging.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userdata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#Recharging.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.Recharging.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Called when executing a state.
+In the base class this raises a NotImplementedError.</p>
+<p>&#64;type ud: L{UserData} structure
+&#64;param ud: Userdata for the scope in which this state is executing</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.callback_bat">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">callback_bat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#callback_bat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.callback_bat" title="Permalink to this definition"></a></dt>
+<dd><p>callback function for updating the published bool detects the status of
+battery_charged_flag (battery status).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – the subscribed bool value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The flag after changing its status.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>battery_charged_flag</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.callback_map">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">callback_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#callback_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.callback_map" title="Permalink to this definition"></a></dt>
+<dd><p>callback function for updating the published bool detects the status of
+map_uploaded_flag (map uploaded or not).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – the subscribed bool value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The flag after changing it’s status.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>map_Uploaded_flag</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.check_and_update_visitedat_property">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">check_and_update_visitedat_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#check_and_update_visitedat_property"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.check_and_update_visitedat_property" title="Permalink to this definition"></a></dt>
+<dd><p>Check and update the visitedAt property of the given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>ArmorClient</em>) – The ArmorClient object for making calls to the server.</p></li>
+<li><p><strong>location</strong> (<em>str</em>) – The location to check and update.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.check_nearby_urgent_room">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">check_nearby_urgent_room</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#check_nearby_urgent_room"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.check_nearby_urgent_room" title="Permalink to this definition"></a></dt>
+<dd><p>Check for nearby urgent rooms, update the global <cite>urgent_room_flag</cite>, and return the urgent room if it exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The urgent room nearby, according to the urgency of each robot. Returns ‘0’ if no urgent room is found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.generate_path_to_target">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">generate_path_to_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reachable_locations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#generate_path_to_target"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.generate_path_to_target" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a potential path from the current location to the target location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>ArmorClient</em>) – The ArmorClient object for making calls to the server.</p></li>
+<li><p><strong>current_location</strong> (<em>str</em>) – The current location of the robot.</p></li>
+<li><p><strong>target_location</strong> (<em>str</em>) – The target location to reach.</p></li>
+<li><p><strong>reachable_locations</strong> (<em>list</em>) – List of reachable locations from the current location.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A potential path from the current location to the target location.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.loading_map">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">loading_map</span></span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#loading_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.loading_map" title="Permalink to this definition"></a></dt>
+<dd><p>State class for the loading_map state in the finite state machine to wait in it until the map is built.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.loading_map.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userdata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#loading_map.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.loading_map.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Called when executing a state.
+In the base class this raises a NotImplementedError.</p>
+<p>&#64;type ud: L{UserData} structure
+&#64;param ud: Userdata for the scope in which this state is executing</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.move_in_the_map">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">move_in_the_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">desired</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#move_in_the_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.move_in_the_map" title="Permalink to this definition"></a></dt>
+<dd><p>This function moves the real robot to the specified location in the map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>desired</strong> (<em>str</em>) – The name of the location to move the robot to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the cordinates_srv service call, indicating whether the target was reached successfully.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.move_to_urgent_room">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">move_to_urgent_room</span></span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#move_to_urgent_room"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.move_to_urgent_room" title="Permalink to this definition"></a></dt>
+<dd><p>State class for the move_to_urgent_room state in the finite state machine once the urgent is chosen.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.move_to_urgent_room.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userdata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#move_to_urgent_room.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.move_to_urgent_room.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Called when executing a state.
+In the base class this raises a NotImplementedError.</p>
+<p>&#64;type ud: L{UserData} structure
+&#64;param ud: Userdata for the scope in which this state is executing</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.moving_in_corridoor_planning_for_urgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">moving_in_corridoor_planning_for_urgent</span></span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#moving_in_corridoor_planning_for_urgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.moving_in_corridoor_planning_for_urgent" title="Permalink to this definition"></a></dt>
+<dd><p>State class for the moving_in_corridoor_planning_for_urgent state in the finite state machine for the robot to keep
+moving in corridoor until there is urgent room detected.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.moving_in_corridoor_planning_for_urgent.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userdata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#moving_in_corridoor_planning_for_urgent.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.moving_in_corridoor_planning_for_urgent.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Called when executing a state.
+In the base class this raises a NotImplementedError.</p>
+<p>&#64;type ud: L{UserData} structure
+&#64;param ud: Userdata for the scope in which this state is executing</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.navigate_to">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">navigate_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#navigate_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.navigate_to" title="Permalink to this definition"></a></dt>
+<dd><p>Navigate the robot to the target location and check the best path to do that .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target_location</strong> (<em>str</em>) – The location to which the robot should move.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.round_in_the_room">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">round_in_the_room</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#round_in_the_room"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.round_in_the_room" title="Permalink to this definition"></a></dt>
+<dd><p>Function for scanning the environment by rotating the robot in place.</p>
+<p>This function rotates the robot in place by publishing a Twist message with a positive angular.z value to the ‘cmd_vel’ topic.
+It does this for 10 iterations at a rate of 10Hz, and then sleeps for 5 seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.set_map_coordinates">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">set_map_coordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#set_map_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.set_map_coordinates" title="Permalink to this definition"></a></dt>
+<dd><p>Initially, a list of room names is generated. For each room in the list, the ArmorClient
+is used to query and retrieve the respective X and Y coordinates. These values are stored
+in variables ‘X’ and ‘Y’ from the map after it’s loaded, respectively. Subsequently, the function
+populates the ‘coordinates’dictionary with the room name as the key and a nested dictionary containing
+the X and Y coordinates as the value.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.update_location_property">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">update_location_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#update_location_property"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.update_location_property" title="Permalink to this definition"></a></dt>
+<dd><p>Update the location property of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>ArmorClient</em>) – The ArmorClient object for making calls to the server.</p></li>
+<li><p><strong>robot</strong> (<em>str</em>) – The name of the robot.</p></li>
+<li><p><strong>new_location</strong> (<em>str</em>) – The new location to update.</p></li>
+<li><p><strong>old_location</strong> (<em>str</em>) – The old location to replace.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.finite_state_machine.update_now_property">
+<span class="sig-prename descclassname"><span class="pre">scripts.finite_state_machine.</span></span><span class="sig-name descname"><span class="pre">update_now_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/finite_state_machine.html#update_now_property"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.finite_state_machine.update_now_property" title="Permalink to this definition"></a></dt>
+<dd><p>Update the current time property of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>ArmorClient</em>) – The ArmorClient object for making calls to the server.</p></li>
+<li><p><strong>robot</strong> (<em>str</em>) – The name of the robot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-scripts.battery">
+<span id="battery-module"></span><h1>Battery Module<a class="headerlink" href="#module-scripts.battery" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-battery"></span><p>The primary purpose of this module is to publish true or false according to status of the battery
+to change the flag of robot battery.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.battery.battery_state_publisher">
+<span class="sig-prename descclassname"><span class="pre">scripts.battery.</span></span><span class="sig-name descname"><span class="pre">battery_state_publisher</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/battery.html#battery_state_publisher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.battery.battery_state_publisher" title="Permalink to this definition"></a></dt>
+<dd><p>Function which Publishes the battery state periodically to the ‘battery_state’ topic.</p>
+</dd></dl>
+
+</section>
+<section id="module-scripts.load_ontology">
+<span id="load-ontology-module"></span><h1>Load Ontology Module<a class="headerlink" href="#module-scripts.load_ontology" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-load_ontology"></span><p>The primary purpose of this module is to build the raw map which has only “Robot1”
+elment with the whole data and object properties plus the coordinates of the locations.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.load_ontology.get_ids">
+<span class="sig-prename descclassname"><span class="pre">scripts.load_ontology.</span></span><span class="sig-name descname"><span class="pre">get_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/load_ontology.html#get_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.load_ontology.get_ids" title="Permalink to this definition"></a></dt>
+<dd><p>This function get the ids from the camera of the robot and update the global vatiable ids
+which will be used to get the locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – the subcribed list of ids to be seperated and put in the ids.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.load_ontology.load_map">
+<span class="sig-prename descclassname"><span class="pre">scripts.load_ontology.</span></span><span class="sig-name descname"><span class="pre">load_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/load_ontology.html#load_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.load_ontology.load_map" title="Permalink to this definition"></a></dt>
+<dd><p>Builds the ontology according to the markers ids and save all the locations, rooms and corridors with their coordinates.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.load_ontology.update_timestamp">
+<span class="sig-prename descclassname"><span class="pre">scripts.load_ontology.</span></span><span class="sig-name descname"><span class="pre">update_timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/load_ontology.html#update_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.load_ontology.update_timestamp" title="Permalink to this definition"></a></dt>
+<dd><p>function for Updating the NOW property for the robot</p>
+</dd></dl>
+
+</section>
+<section id="module-scripts.autonomous">
+<span id="autonomous-module"></span><h1>Autonomous Module<a class="headerlink" href="#module-scripts.autonomous" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-autonomous"></span><dl class="simple">
+<dt>Service:</dt><dd><p>/robot_coordinates which make the robot move to the set x and y coordinates</p>
+</dd>
+<dt>Actions:</dt><dd><p>/move_base the goal of entered x and y to check if it arrived to it or not</p>
+</dd>
+</dl>
+<p>This node is used for the user choice number one which is resposible for  auronomous robot drive.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.autonomous.handler">
+<span class="sig-prename descclassname"><span class="pre">scripts.autonomous.</span></span><span class="sig-name descname"><span class="pre">handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/autonomous.html#handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.autonomous.handler" title="Permalink to this definition"></a></dt>
+<dd><p>This function is used for handeling the services as it waits for the user enter the x and y coordinates
+The user message is passed to the service
+<code class="docutils literal notranslate"><span class="pre">robot_coordinates</span></code>,
+advertised by <code class="xref py py-mod docutils literal notranslate"><span class="pre">user_control</span></code>.
+and then using actions to insure if the robot reached the right goal or not.</p>
+<dl class="simple">
+<dt>arg:</dt><dd><p>req(int):the services element for recieving x and y coordinates</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-scripts.scanner">
+<span id="scanner-module"></span><h1>Scanner Module<a class="headerlink" href="#module-scripts.scanner" title="Permalink to this heading"></a></h1>
+<p>ROS node for controlling the arm which holds the camera to scan the markers</p>
+<p>Action server:</p>
+<ul class="simple">
+<li><p>action_scanner</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.scanner.arm_move">
+<span class="sig-prename descclassname"><span class="pre">scripts.scanner.</span></span><span class="sig-name descname"><span class="pre">arm_move</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/scanner.html#arm_move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.scanner.arm_move" title="Permalink to this definition"></a></dt>
+<dd><p>Function for moving the robot arm in a scanning motion.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="scripts.scanner.callback">
+<span class="sig-prename descclassname"><span class="pre">scripts.scanner.</span></span><span class="sig-name descname"><span class="pre">callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scripts/scanner.html#callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scripts.scanner.callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function to store the current position of the arm.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Hussein.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
