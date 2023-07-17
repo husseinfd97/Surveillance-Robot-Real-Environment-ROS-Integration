@@ -1,10 +1,10 @@
 # Second Assignment of Experimental Robotic Laboratory 
 
-This assignment is imporvement of the [first asssignment](https://github.com/husseinfd97/as_1.git) project which is focusing on implementing a robotic system using the Armour package which is resposible for manipulating online OWL ontologies and Smach package which is resposible for building hierarchical state machines decribing the diffrent staes of the robot. The system aims to simulate a robot operating in a 2D environment consisting of four rooms and three corridors. The robot's behavior is designed to navigate through the environment, visiting different locations while following certain policies but in this assignment URDF of a robot and the code is implemented in real environment as each room and location has real x and y coordinates and here you can find the [documented](https://husseinfd97.github.io/assignment2/) code with sphinx.
+This assignment is imporvement of the [first asssignment](https://github.com/husseinfd97/as_1.git) project which is focusing on implementing a robotic system using the Armor package which is resposible for manipulating online OWL ontologies and Smach package which is resposible for building hierarchical state machines decribing the diffrent staes of the robot. The system aims to simulate a robot operating in a 2D environment consisting of four rooms and three corridors. The robot's behavior is designed to navigate through the environment, visiting different locations while following certain policies but in this assignment URDF of a robot and the code is implemented in real environment as each room and location has real x and y coordinates and here you can find the [documented](https://husseinfd97.github.io/assignment2/) code with sphinx.
 
 
 ## Environment
-The 2D environment is composed of four rooms and three corridors. The rooms are labeled as R1, R2, R3, and R4, while the corridors are labeled as C1, C2, and E. The robot moves within this environment, with various doors (D1...D6) connecting the rooms and corridors as it's shown in the figure.
+The 3D environment is composed of four rooms and three corridors. The rooms are labeled as R1, R2, R3, and R4, while the corridors are labeled as C1, C2, and E. The robot moves within this environment, with various doors (D1...D6) connecting the rooms and corridors as it's shown in the figure.
 
 ![map](https://github.com/husseinfd97/assignment2/assets/94136236/0af09991-1499-45d3-b3e1-6fd2faa056ba)
 
@@ -132,7 +132,7 @@ In order to run the simulation, this software is designed to be compatible with 
   - [ARMOR Server](https://github.com/EmaroLab/armor), is a ROS integration facilitates the manipulation of OWL ontologies online.
   - [smach](http://wiki.ros.org/smach), To enable simulation of the robot's behavior, a state machine library is utilized, which can be installed by excuting this line in the terminal `sudo apt-get install ros-noetic-smach-ros`
   - [OpenCV](http://wiki.ros.org/vision_opencv), a library for image processing.
-  - [move_base](http://wiki.ros.org/move_base), to control the robot motion.
+  - [move_base](http://wiki.ros.org/move_base), to control the robot motion allover the map.
   - [gmapping](http://wiki.ros.org/gmapping), implements the SLAM algorithm to build the map based on the laser scan.
   - [rviz](http://wiki.ros.org/rviz), a robotic visualization tool.
   - [gazebo](https://gazebosim.org/), a simulation tool.
