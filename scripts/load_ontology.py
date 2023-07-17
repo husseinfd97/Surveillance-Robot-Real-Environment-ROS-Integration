@@ -26,7 +26,7 @@ from std_msgs.msg import Bool, String
 from assignment2.srv import RoomInformation
 import assignment2.msg
 from os.path import dirname, realpath
-#import helper
+import helper
 
 
 client = ArmorClient("example", "ontoRef") 
@@ -153,21 +153,23 @@ def load_map():
 def main():
    global ids
    rospy.init_node('load_map_node', anonymous=True)
-   subscriber=rospy.Subscriber("/marker_publisher/marker_pub_topic", String, get_ids)
+   #subscriber=rospy.Subscriber("/marker_publisher/marker_pub_topic", String, get_ids)
    while True:
       #print("waiting for ids")
-      #ids=[11, 12, 13, 14, 15, 16, 17]
+      ids=[11, 12, 13, 14, 15, 16, 17]
       print(ids)
       if len(ids)>=7:
         print("I have all the markers, I will build the map")
-        subscriber.unregister()
+        #subscriber.unregister()
         pub = rospy.Publisher('load_map', Bool, queue_size=10)
         pub.publish(0)
         load_map()
-        print("Map built, I will shutdown the node")
+        print("Map built")
         pub.publish(1)
         rospy.sleep(3)
         rospy.signal_shutdown('load_map_node')
+        rospy.signal_shutdown('marker_publisher')
+
       rospy.sleep(1)
 
 

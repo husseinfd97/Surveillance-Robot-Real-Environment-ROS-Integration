@@ -27,7 +27,7 @@ from geometry_msgs.msg import Twist
 from armor_api.armor_client import ArmorClient
 from os.path import dirname, realpath
 import datetime
-#import helper
+import helper
 
 # Get the map direction to be uploaded  
 path = dirname(realpath(__file__))
@@ -35,7 +35,7 @@ new_map = path + "/../maps/new_map.owl"
 
  
 # Set the initial values of the status flages
-map_Uploaded_flag=0
+map_Uploaded_flag=1
 battery_charged_flag=1
 urgent_room_flag=0
 planning_finished_flag=1
@@ -204,18 +204,22 @@ def navigate_to(target_location):
 
     if target_location == current_location:
         # If the target location is the same as the current location, directly move to the target location
-        update_location_property(client, 'Robot1', target_location, current_location)
-        update_now_property(client, 'Robot1')
-        check_and_update_visitedat_property(client, target_location)
+        rt=move_in_the_map(target_location)
+        if rt == 1:
+            update_location_property(client, 'Robot1', target_location, current_location)
+            update_now_property(client, 'Robot1')
+            check_and_update_visitedat_property(client, target_location)
     else:
         reachable_locations_query = client.call('QUERY', 'OBJECTPROP', 'IND', ['canReach', 'Robot1'])
         reachable_locations = helper.list_Locations(reachable_locations_query.queried_objects)
         if target_location in reachable_locations:
             #print('check1')
-            update_location_property(client, 'Robot1', target_location, current_location)
-            #print('check2')
-            update_now_property(client, 'Robot1')
-            check_and_update_visitedat_property(client, target_location)
+            rt=move_in_the_map(target_location)
+            if rt == 1:
+                update_location_property(client, 'Robot1', target_location, current_location)
+                #print('check2')
+                update_now_property(client, 'Robot1')
+                check_and_update_visitedat_property(client, target_location)
         else:
             print(reachable_locations)
             #print('check3')
@@ -228,24 +232,28 @@ def navigate_to(target_location):
             print(target_location)
             print(intermediate_location)
             print(current_location)
-            update_location_property(client, 'Robot1', intermediate_location, current_location)
-            #print('check5')
-            hena = client.call('QUERY', 'OBJECTPROP', 'IND', ['isIn', 'Robot1'])
-            hena = helper.clean_list(hena.queried_objects)
-            print('Robot here at:', hena)
-            update_now_property(client, 'Robot1')
-            check_and_update_visitedat_property(client, intermediate_location)
-            current_location = intermediate_location
+            rt=move_in_the_map(target_location)
+            if rt == 1:
+                update_location_property(client, 'Robot1', intermediate_location, current_location)
+                #print('check5')
+                hena = client.call('QUERY', 'OBJECTPROP', 'IND', ['isIn', 'Robot1'])
+                hena = helper.clean_list(hena.queried_objects)
+                print('Robot here at:', hena)
+                update_now_property(client, 'Robot1')
+                check_and_update_visitedat_property(client, intermediate_location)
+                current_location = intermediate_location
 
             reachable_locations_query = client.call('QUERY', 'OBJECTPROP', 'IND', ['canReach', 'Robot1'])
             reachable_locations = helper.list_Locations(reachable_locations_query.queried_objects)
 
             if target_location in reachable_locations:
                 #print('check6')
-                update_location_property(client, 'Robot1', target_location, current_location)
-                #print('check7')
-                update_now_property(client, 'Robot1')
-                check_and_update_visitedat_property(client, target_location)
+                rt=move_in_the_map(target_location)
+                if rt == 1:
+                    update_location_property(client, 'Robot1', target_location, current_location)
+                    #print('check7')
+                    update_now_property(client, 'Robot1')
+                    check_and_update_visitedat_property(client, target_location)
 
     final_location_query = client.call('QUERY', 'OBJECTPROP', 'IND', ['isIn', 'Robot1'])
     print('Robot finally isIn', helper.clean_list(final_location_query.queried_objects))
@@ -262,11 +270,8 @@ def update_location_property(client, robot, new_location, old_location):
         old_location (str): The old location to replace.
     """
     print(new_location)
-
-    rt=move_in_the_map(new_location)
-    if rt == 1:
-        client.call('REPLACE', 'OBJECTPROP', 'IND', ['isIn', robot, new_location, old_location])
-        client.call('REASON','','',[''])
+    client.call('REPLACE', 'OBJECTPROP', 'IND', ['isIn', robot, new_location, old_location])
+    client.call('REASON','','',[''])
 
 def update_now_property(client, robot):
     """

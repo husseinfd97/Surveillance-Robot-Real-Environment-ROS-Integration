@@ -43,15 +43,15 @@ def battery_state_publisher():
     while not rospy.is_shutdown():
         if charged_duration > 0:
             battery_state_msg.data = True
-            #cancel goals so the robot leaves everything and go to charge
-            client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-            client.wait_for_server()
-            client.cancel_all_goals()
             rospy.loginfo('Battery state: %s', battery_state_msg.data)
             pub.publish(battery_state_msg)
             charged_duration -= 1
         elif recharge_duration > 0:
             battery_state_msg.data = False
+            #cancel goals so the robot leaves everything and go to charge
+            client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+            client.wait_for_server()
+            client.cancel_all_goals()
             rospy.loginfo('Battery state: %s', battery_state_msg.data)
             pub.publish(battery_state_msg)
             recharge_duration -= 1

@@ -9,7 +9,7 @@
   <node name="coordinate_autonomous" pkg="assignment2" type="autonomous.py" output="screen"/>
   
   <node name="finite_state_machine" pkg="assignment2" type="finite_state_machine.py" output="screen"/>
-  <node pkg="smach_viewer" type="smach_viewer.py" name="smach_viewer" output="screen" />
+  <!--<node pkg="smach_viewer" type="smach_viewer.py" name="smach_viewer" output="screen" /> -->
 
   
 

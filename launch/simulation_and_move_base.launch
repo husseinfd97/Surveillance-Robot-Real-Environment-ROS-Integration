@@ -61,7 +61,8 @@
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find assignment2)/config/camera_config.rviz" /> 
 	
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot1 -param robot_description -x -6.0 -y 11.0 -z 0.05 -Y 3.14159"/>
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot1 -param robot_description -x 1.5 -y 8.0 -z 0.05 -Y 0"/> 
+  <!--<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot1 -param robot_description -x 1.5 -y 8.0 -z 0.05 -Y 3.14159"/>-->
    <rosparam file="$(find assignment2)/config/motors_config.yaml" command="load" ns="/robot" />
    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen" args="--namespace=/robot
         joint_state_controller
