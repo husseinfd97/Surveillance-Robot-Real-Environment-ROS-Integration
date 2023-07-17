@@ -2,7 +2,7 @@
 <launch>
  
   <node pkg="armor" type="execute" name="armor_service" args="it.emarolab.armor.ARMORMainService" launch-prefix="xterm -e" />
-  <!--<node name="marker_server" pkg="assignment2" type="marker_server" /> -->
+  <!--<node name="marker_server" pkg="assignment2" type="marker_server" />--> 
   <node pkg="assignment2" type="battery.py" name="battery" output="screen" launch-prefix="xterm -e"/>
   <!--<node name="load_ontology" pkg="assignment2" type="load_ontology.py" output="screen"/> -->
   
