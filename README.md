@@ -155,6 +155,7 @@ While the implemented system covers the specified requirements, it also has some
 To enhance the system, the following improvements can be considered:
 - Implementing more sophisticated surveillance policies that account for dynamic factors and optimize robot movement (for maps more than 2 corridors and dynamically changing).
 - Design a battery system depends on feedback from the robot depedning on how far the robot went.
+- Using moveIt to control the robotic arm.
 
   By addressing these improvements, the system can be further optimized for various real-world scenarios and requirements.
 
